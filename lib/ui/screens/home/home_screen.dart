@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_mon_c9/ui/screens/home/bottom_sheet/bottom_sheet_screen.dart';
+import 'package:todo_mon_c9/ui/bottom_sheet/bottom_sheet_screen.dart';
 import 'package:todo_mon_c9/ui/screens/home/tabs/list/list_screen.dart';
 import 'package:todo_mon_c9/ui/screens/home/tabs/settings/settings_screen.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
@@ -72,6 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void showBottomSheet () =>showModalBottomSheet(
       context: context,
-      builder: (context) =>AddBottomSeet() ,
+      builder: (context) =>AddBottomSeet(),
   );
 }

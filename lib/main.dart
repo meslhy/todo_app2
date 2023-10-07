@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/ui/providers/list_provider.dart';
+import 'package:todo_mon_c9/ui/screens/auth/login/login_screen.dart';
+import 'package:todo_mon_c9/ui/screens/auth/register/regester_screen.dart';
 import 'package:todo_mon_c9/ui/screens/splash/splash_screen.dart';
 import 'package:todo_mon_c9/ui/utils/app_theme.dart';
 
@@ -41,9 +43,11 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       routes: {
         SplashScreen.routeName: (_) => SplashScreen(),
-        HomeScreen.routeName: (_) => HomeScreen()
+        HomeScreen.routeName: (_) => HomeScreen(),
+        LoginScreen.routeName: (_) => LoginScreen(),
+        RegisterScreen.routeName: (_) => RegisterScreen(),
       },
-      initialRoute: SplashScreen.routeName,
+      initialRoute: LoginScreen.routeName,
     );
   }
 }

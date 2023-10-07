@@ -18,6 +18,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   scroll_bottom_navigation_bar: ^4.0.0
   calendar_timeline: ^1.1.2
+  firebase_core: ^2.16.0
+  cloud_firestore: ^4.9.2
+  flutter_slidable: ^3.0.0
+  firebase_auth: ^4.10.1
 
 dev_dependencies:
   flutter_test:

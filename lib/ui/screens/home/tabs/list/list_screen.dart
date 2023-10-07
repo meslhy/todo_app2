@@ -1,13 +1,32 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:todo_mon_c9/model/todo_dm.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_mon_c9/ui/providers/list_provider.dart';
 import 'package:todo_mon_c9/ui/screens/home/tabs/list/todo_widget.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
 
-class ListScreen extends StatelessWidget {
+class ListScreen extends StatefulWidget {
+
+  @override
+  State<ListScreen> createState() => _ListScreenState();
+}
+
+class _ListScreenState extends State<ListScreen> {
+
+ late ListProvider provider ;
+
+ @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      provider.refreshTodosList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of(context);
+
     return Column(
       children: [
         Stack(
@@ -31,10 +50,13 @@ class ListScreen extends StatelessWidget {
               ),
             ),
             CalendarTimeline(
-              initialDate: DateTime.now(),
+              initialDate: provider.selectedDay,
               firstDate: DateTime(2022, 1, 1),
               lastDate: DateTime(2025, 12, 29),
-              onDateSelected: (date) => print(date),
+              onDateSelected: (date){
+                provider.selectedDay = date;
+                provider.refreshTodosList();
+              },
               leftMargin: 20,
               monthColor: AppColors.white,
               dayColor: AppColors.primary,
@@ -48,16 +70,14 @@ class ListScreen extends StatelessWidget {
         Expanded(
           child: ListView.builder(
               itemBuilder: (context, index) => ToDo(
-                  TodoDM(
-                    title: "football" ,
-                    description: "hi dkdk",
-                    date: DateTime.now(),
-                    isDone: true,
-                  ),),
-            itemCount: 10,
+                model: provider.todos[index],
+              ),
+            itemCount: provider.todos.length,
           ),
         ),
       ],
     );
   }
+
+
 }

@@ -1,10 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_mon_c9/model/app_user_dm.dart';
 import 'package:todo_mon_c9/ui/screens/auth/register/regester_screen.dart';
+import 'package:todo_mon_c9/ui/screens/home/home_screen.dart';
+import 'package:todo_mon_c9/ui/utils/dialog_utils.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
 
   static const String routeName = "loginRoute";
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   String email = "";
 
   String password = "";
@@ -103,8 +113,48 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+
+
+
+  void login() async{
+
+    try {
+
+      showLoading(context);
+      UserCredential userCredential =
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      AppUser currentUser = await getUserFromFireStore(userCredential.user!.uid);
+      AppUser.currentUser =currentUser;
+      hideLoading(context);
+      Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+    } on FirebaseAuthException catch (e) {
+
+      hideLoading(context);
+      showErrorDialog(
+        context,
+        e.message ?? "Something wrong. please try again!",
+      );
+
+    } catch (e) {
+      hideLoading(context);
+    }
+  }
+
+   Future<AppUser> getUserFromFireStore(String id) async{
+
+    CollectionReference<AppUser> usersCollection = AppUser.collection();
+
+     DocumentSnapshot<AppUser> documentSnapshot = await usersCollection.doc(id).get();
+
+     return documentSnapshot.data()!;
+
+
+  }
+
+
 }
 
-void login() {
-
-}

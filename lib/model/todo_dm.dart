@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
 class TodoDM{
-  static const String collectionName ="users";
+  static const String collectionName ="todos";
+  static TodoDM? currentTodoDM;
   late String id ;
   late String title ;
   late String description ;

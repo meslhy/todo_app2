@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_mon_c9/model/app_user_dm.dart';
+import 'package:todo_mon_c9/ui/screens/home/home_screen.dart';
 import 'package:todo_mon_c9/ui/utils/dialog_utils.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -104,12 +107,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
 
       showLoading(context);
+      UserCredential userCredential =
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
+      AppUser newUser = AppUser(
+          id: userCredential.user!.uid,
+          email: email,
+          userName: username
+      );
+      AppUser.currentUser = newUser;
+      await registerUserInFireStore(newUser);
       hideLoading(context);
+      Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     } on FirebaseAuthException catch (e) {
 
       hideLoading(context);
@@ -122,6 +134,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       hideLoading(context);
     }
   }
+
+
+  Future registerUserInFireStore(AppUser user)async {
+
+
+    CollectionReference<AppUser> userCollection =
+    AppUser.collection();
+
+    await userCollection.doc(user.id).set(user);
+    
+  }
 }
+
+
 
 

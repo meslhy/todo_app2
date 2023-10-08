@@ -5,8 +5,10 @@ import 'package:todo_mon_c9/ui/utils/app_colors.dart';
 abstract class AppTheme{
   static const TextStyle appBarTextStyle = TextStyle(fontWeight: FontWeight.bold,
    fontSize: 22, color: AppColors.white);
-  static const TextStyle taskTitleTextStyle = TextStyle(fontWeight: FontWeight.bold,
-      fontSize: 18, color: AppColors.primary);
+  static const TextStyle taskTitleTextStyleNotDone = TextStyle(fontWeight: FontWeight.bold,
+      fontSize: 20, color: AppColors.primary);
+  static const TextStyle taskTitleTextStyleDone = TextStyle(fontWeight: FontWeight.bold,
+      fontSize: 20, color: AppColors.green);
   static const TextStyle taskDescriptionTextStyle = TextStyle(fontWeight: FontWeight.normal,
       fontSize: 12, color: AppColors.lightBlack);
   static const TextStyle bottomSheetTitleTextStyle = TextStyle(fontWeight: FontWeight.normal,

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_mon_c9/model/app_user_dm.dart';
 import 'package:todo_mon_c9/ui/bottom_sheet/bottom_sheet_screen.dart';
+import 'package:todo_mon_c9/ui/providers/list_provider.dart';
+import 'package:todo_mon_c9/ui/screens/auth/login/login_screen.dart';
 import 'package:todo_mon_c9/ui/screens/home/tabs/list/list_screen.dart';
 import 'package:todo_mon_c9/ui/screens/home/tabs/settings/settings_screen.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
@@ -22,14 +26,27 @@ class _HomeScreenState extends State<HomeScreen> {
     SettingsScreen(),
   ];
 
+  late ListProvider provider;
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "To Do List",
+          "Welcome ${AppUser.currentUser!.userName}",
           style: AppTheme.appBarTextStyle,
         ),
+        actions: [
+          IconButton(
+            onPressed: (){
+              AppUser.currentUser = null;
+              provider.todos.clear();
+              Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+
+            },
+           icon:Icon(Icons.logout_rounded),
+          ),
+        ],
       ),
       body: Screens[currentIndex],
       floatingActionButton: FloatingButton(),

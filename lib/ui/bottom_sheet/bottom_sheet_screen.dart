@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_mon_c9/model/app_user_dm.dart';
 import 'package:todo_mon_c9/model/todo_dm.dart';
 import 'package:todo_mon_c9/ui/providers/list_provider.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
@@ -98,7 +99,10 @@ class _AddBottomSeetState extends State<AddBottomSeet> {
 
   void addTodoToFireStore() {
 
+
     CollectionReference todosCollectionRef =
+    AppUser.collection().doc(AppUser.currentUser!.id)
+        .collection(TodoDM.collectionName);
     FirebaseFirestore.instance.collection(TodoDM.collectionName);
 
     DocumentReference newEmptyDoc = todosCollectionRef.doc();
@@ -109,10 +113,11 @@ class _AddBottomSeetState extends State<AddBottomSeet> {
       "description":descriptionController.text,
       "date":selectedDate.microsecondsSinceEpoch,
       "isDone": false,
-    }).timeout(Duration(milliseconds: 100), onTimeout: (){
-      Navigator.pop(context);
+    }).then((value){
       provider.refreshTodosList();
+      Navigator.pop(context);
     });
+
 
   }
 }

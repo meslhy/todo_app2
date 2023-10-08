@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/ui/providers/list_provider.dart';
 import 'package:todo_mon_c9/ui/screens/auth/login/login_screen.dart';
 import 'package:todo_mon_c9/ui/screens/auth/register/regester_screen.dart';
+import 'package:todo_mon_c9/ui/screens/edit_todo/edit_screen.dart';
 import 'package:todo_mon_c9/ui/screens/splash/splash_screen.dart';
 import 'package:todo_mon_c9/ui/utils/app_theme.dart';
 
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         HomeScreen.routeName: (_) => HomeScreen(),
         LoginScreen.routeName: (_) => LoginScreen(),
         RegisterScreen.routeName: (_) => RegisterScreen(),
+        EditScreen.routeName: (_) => EditScreen(),
       },
       initialRoute: LoginScreen.routeName,
     );

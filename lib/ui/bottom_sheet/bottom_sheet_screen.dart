@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/model/app_user_dm.dart';
 import 'package:todo_mon_c9/model/todo_dm.dart';
 import 'package:todo_mon_c9/ui/providers/list_provider.dart';
+import 'package:todo_mon_c9/ui/screens/auth/login/widgets/all_widgets.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
 
 class AddBottomSeet extends StatefulWidget {
@@ -30,60 +31,56 @@ class _AddBottomSeetState extends State<AddBottomSeet> {
   Widget build(BuildContext context) {
     provider =Provider.of(context);
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 30,
-        vertical: 20,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            "Add New Task",
-            style: Theme.of(context).textTheme.bodySmall,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16,),
-          TextField(
-            controller:titleController ,
-            decoration: InputDecoration(
-              labelText: "Enter Your Task Title",
-            ),
-          ),
-          const SizedBox(height: 12,),
-          TextField(
-                  controller: descriptionController,
-            decoration: InputDecoration(
-              labelText: "Enter Description",
-            ),
-          ),
-          const SizedBox(height: 22,),
-          Text(
-            "Select time",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 22,),
-          InkWell(
-            onTap: (){
-              showMyDatePicker();
-            },
-            child: Text(
-              "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.grey
-              ),
+      color: AppColors.accent,
+      child: Container(
+        margin: EdgeInsets.all(15),
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.black),
+          color: AppColors.white
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              "Add New Task",
+              style: Theme.of(context).textTheme.bodySmall,
               textAlign: TextAlign.center,
             ),
-          ),
-          const Spacer(),
-          ElevatedButton(
-              onPressed: (){
-                addTodoToFireStore();
+            const SizedBox(height: 16,),
+            textFF(controller: titleController, labelText: "Enter Your Task Title"),
+            const SizedBox(height: 12,),
+            textFF(controller: descriptionController, labelText: "Enter Description" , isMultiLine: true),
+            const SizedBox(height: 22,),
+            Text(
+              "Select time",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 22,),
+            InkWell(
+              onTap: (){
+                showMyDatePicker();
               },
-              child:Text("Add"),
-          ),
-        ],
+              child: Text(
+                "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.grey
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const Spacer(),
+            ElevatedButton(
+                onPressed: (){
+                  addTodoToFireStore();
+                },
+                child:Text("Add"),
+            ),
+          ],
+        ),
       ),
     );
   }

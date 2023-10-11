@@ -18,7 +18,7 @@ abstract class AppTheme{
     primaryColor: AppColors.primary,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.primary,
-      elevation: 0,
+      elevation: 0.00,
       titleTextStyle: appBarTextStyle,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(

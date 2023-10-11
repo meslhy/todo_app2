@@ -36,6 +36,8 @@ class _EditScreenState extends State<EditScreen> {
     return Scaffold(
       backgroundColor: AppColors.accent,
       appBar: AppBar(
+        elevation: 0.00,
+        backgroundColor: AppColors.primary,
         title: Text(
           "To Do List",
           style:AppTheme.appBarTextStyle,

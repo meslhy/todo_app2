@@ -18,8 +18,11 @@ class ToDo extends StatelessWidget {
 
   late ListProvider provider;
 
+  late bool isDone;
+
   @override
   Widget build(BuildContext context) {
+    isDone = model.isDone;
     provider = Provider.of(context);
     return Container(
       height: MediaQuery.of(context).size.height * .12,
@@ -62,9 +65,9 @@ class ToDo extends StatelessWidget {
             },
             child: Row(
               children: [
-                const VerticalDivider(
+                 VerticalDivider(
                   thickness: 5,
-                  color: AppColors.primary,
+                  color: model.isDone ? AppColors.green : AppColors.primary,
                 ),
                 const SizedBox(
                   width: 12,
@@ -92,9 +95,11 @@ class ToDo extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: ()async{
+
+                    isDone = !isDone;
                     await setDoneOption();
                   },
-                  child: model.isDone?
+                  child: isDone?
                   Padding(
                     padding: const EdgeInsets.only(right: 18.0),
                     child: Text(
@@ -128,7 +133,7 @@ class ToDo extends StatelessWidget {
 
   Future setDoneOption() async{
     AppUser.collection().doc(AppUser.currentUser!.id).collection(TodoDM.collectionName).doc("${model.id}").update({
-      "isDone": !model.isDone
+      "isDone": !model.isDone,
     }).then((value) =>provider.refreshTodosList());
 
 

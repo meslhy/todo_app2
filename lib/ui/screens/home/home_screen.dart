@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/model/app_user_dm.dart';
+import 'package:todo_mon_c9/shared_locale/helper.dart';
 import 'package:todo_mon_c9/ui/bottom_sheet/bottom_sheet_screen.dart';
 import 'package:todo_mon_c9/ui/providers/list_provider.dart';
 import 'package:todo_mon_c9/ui/screens/auth/login/login_screen.dart';
@@ -18,8 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
 
-
-
   List<Widget> Screens =
   [
     ListScreen(),
@@ -31,25 +31,29 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     provider = Provider.of(context);
     return Scaffold(
+      backgroundColor: AppColors.accent,
       appBar: AppBar(
+        elevation: 0.00,
+        backgroundColor: AppColors.primary,
         title: Text(
-          "Welcome ${AppUser.currentUser!.userName}",
+          currentIndex == 1? "Settings" : "Welcome ${AppUser.currentUser!.userName}",
           style: AppTheme.appBarTextStyle,
         ),
         actions: [
           IconButton(
             onPressed: (){
               AppUser.currentUser = null;
+              SharedPrefernce.putData(key: "currentUser" ,user: '');
               provider.todos.clear();
               Navigator.pushReplacementNamed(context, LoginScreen.routeName);
 
             },
-           icon:Icon(Icons.logout_rounded),
+           icon:const Icon(Icons.logout_rounded),
           ),
         ],
       ),
       body: Screens[currentIndex],
-      floatingActionButton: FloatingButton(),
+      floatingActionButton:currentIndex == 1? null : FloatingButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomBar(),
     );
@@ -64,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Icons.add
         ),
         shape: RoundedRectangleBorder(
-            side: BorderSide(width: 3, color: AppColors.white),
+            side:const BorderSide(width: 3, color: AppColors.white),
             borderRadius: BorderRadius.circular(50)),
 
       );
@@ -89,6 +93,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void showBottomSheet () =>showModalBottomSheet(
       context: context,
-      builder: (context) =>AddBottomSeet(),
+      builder: (context) => AddBottomSeet(),
   );
+
+
+  Future<AppUser> getUserFromFireStore(String id) async{
+
+    CollectionReference<AppUser> usersCollection = AppUser.collection();
+
+    DocumentSnapshot<AppUser> documentSnapshot = await usersCollection.doc(id).get();
+
+    return documentSnapshot.data()!;
+
+
+  }
 }

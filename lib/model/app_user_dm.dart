@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:todo_mon_c9/shared_locale/helper.dart';
 
 class AppUser{
 
   static const collectionName = "users" ;
-  static AppUser? currentUser ;
+  static AppUser? currentUser =AppUser.fromJSON(jsonDecode(SharedPrefernce.getData(key: "currentUser")));
   late String id ;
   late String email;
   late String userName;
@@ -20,12 +23,12 @@ class AppUser{
     userName = json["userName"];
   }
 
-  Map<String , Object?> toJSON(){
+    Map<String , Object?> toJSON(){
     return
     {
       "id": id,
-      "email":email,
-      "userName":userName,
+      "email": email,
+      "userName": userName,
   };
   }
 

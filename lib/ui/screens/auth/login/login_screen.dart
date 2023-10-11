@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_mon_c9/model/app_user_dm.dart';
+import 'package:todo_mon_c9/shared_locale/helper.dart';
+import 'package:todo_mon_c9/ui/screens/auth/login/widgets/all_widgets.dart';
 import 'package:todo_mon_c9/ui/screens/auth/register/regester_screen.dart';
 import 'package:todo_mon_c9/ui/screens/home/home_screen.dart';
+import 'package:todo_mon_c9/ui/utils/app_colors.dart';
 import 'package:todo_mon_c9/ui/utils/dialog_utils.dart';
+import 'package:vibration/vibration.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -15,101 +21,103 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String email = "";
-
-  String password = "";
+  TextEditingController emailController =TextEditingController();
+  TextEditingController passController =TextEditingController();
+  bool isPassShown = false;
+  IconData icon = Icons.remove_red_eye_outlined;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primary,
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: AppColors.primary,
         title: const Text("Login"),
         toolbarHeight: MediaQuery
             .of(context)
             .size
             .height * .1,
       ),
-      body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(14.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height * .25,
+      body: Center(
+        child: Container(
+          margin: EdgeInsets.all(24),
+          height: MediaQuery.of(context).size.height * .5,
+          width: MediaQuery.of(context).size.width *.8,
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color:AppColors.white,
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Welcome back !",
+                  style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "Welcome back !",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                TextFormField(
-                  onChanged: (text) {
-                    email = text;
+              ),
+              textFF(labelText: "email" , controller: emailController ),
+              const SizedBox(
+                height: 20,
+              ),
+              textFF(
+                  controller: passController,
+                  labelText: "Password" ,
+                  isPass: true,
+                  isShown: isPassShown,
+                  icon: IconButton(onPressed: (){
+                    icon = isPassShown ? Icons.remove_red_eye_outlined : Icons.remove_outlined ;
+                    setState(() {});
+                    isPassShown =!isPassShown;
+                  }, icon: Icon(icon)),
+              ),
+              const SizedBox(
+                height: 26,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    login();
                   },
-
-                  decoration: const InputDecoration(
-                    label: Text(
-                      "Email",
-                    ),
-
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                TextFormField(
-                  onChanged: (text) {
-                    password = text;
-                  },
-                  decoration: const InputDecoration(
-                    label: Text(
-                      "Password",
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 26,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      login();
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 12),
-                      child: Row(
-                        children: [
-                          Text("Login", style: TextStyle(fontSize: 18),),
-                          Spacer(),
-                          Icon(Icons.arrow_forward)
-                        ],
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(color: AppColors.primary)
                       ),
-                    )),
-                const SizedBox(height: 18,),
-                InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, RegisterScreen.routeName);
-                  },
-                  child: const Text(
-                    "Create account",
-                    style: TextStyle(fontSize: 18, color: Colors.black45),
                   ),
                 ),
-              ],
-            )
-            ,
-          )
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 12),
+                    child: Row(
+                      children: [
+                        Text("Login", style: TextStyle(fontSize: 18),),
+                        Spacer(),
+                        Icon(Icons.arrow_forward)
+                      ],
+                    ),
+                  ),
+              ),
+              const SizedBox(height: 18,),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, RegisterScreen.routeName);
+                },
+                child: const Text(
+                  "Create account",
+                  style: TextStyle(fontSize: 18, color: Colors.black45),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -123,12 +131,13 @@ class _LoginScreenState extends State<LoginScreen> {
       showLoading(context);
       UserCredential userCredential =
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+        email: emailController.text,
+        password: passController.text,
       );
 
       AppUser currentUser = await getUserFromFireStore(userCredential.user!.uid);
       AppUser.currentUser =currentUser;
+      SharedPrefernce.putData(key: "currentUser", user: jsonEncode(currentUser.toJSON()));
       hideLoading(context);
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     } on FirebaseAuthException catch (e) {

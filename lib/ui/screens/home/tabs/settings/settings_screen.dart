@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/shared_locale/helper.dart';
 import 'package:todo_mon_c9/ui/providers/settings_provider.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
-import 'package:todo_mon_c9/ui/utils/app_theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SettingsScreen extends StatefulWidget {
 
@@ -36,12 +37,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-              "Language",
+               Text(
+              AppLocalizations.of(context)!.language,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: AppColors.black
+                color:settingsProvider.isDarkEnabled()? AppColors.white: AppColors.black
               ),
             ),
               const SizedBox(height: 15,),
@@ -55,9 +56,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         borderSide: BorderSide(color: AppColors.primary,width: 2)
                     ),
                     filled: true,
-                    fillColor: AppColors.white
+                    fillColor:settingsProvider.isDarkEnabled()? AppColors.accentDark: AppColors.white
                 ),
-                dropdownColor:AppColors.white,
+                dropdownColor:settingsProvider.isDarkEnabled()? AppColors.accentDark:AppColors.white,
                 borderRadius: BorderRadius.circular(20),
                 value: isAr ? "ar":"en",
                 items:<String>[
@@ -68,7 +69,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     value: value,
                     child:Text(
                       value,
-                      style: TextStyle(fontSize: 20,color: AppColors.primary),
+                      style: TextStyle(fontSize: 20,color:AppColors.primary),
                     ) ,
                   );
                 } ).toList(),
@@ -85,12 +86,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
               ),
               const SizedBox(height: 15,),
-              const Text(
-                "Mode",
+              Text(
+                AppLocalizations.of(context)!.mode,
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.black
+                    color:settingsProvider.isDarkEnabled()? AppColors.white: AppColors.black
                 ),
               ),
               const SizedBox(height: 15,),
@@ -105,9 +106,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         borderSide: BorderSide(color: AppColors.primary,width: 2)
                     ),
                     filled: true,
-                    fillColor: AppColors.white
+                    fillColor:settingsProvider.isDarkEnabled()? AppColors.accentDark: AppColors.white
                 ),
-                dropdownColor:AppColors.white,
+                dropdownColor:settingsProvider.isDarkEnabled()? AppColors.accentDark:AppColors.white,
                 borderRadius: BorderRadius.circular(20),
                 items:<String>[
                   "Dark",

@@ -1,15 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/model/app_user_dm.dart';
 import 'package:todo_mon_c9/model/todo_dm.dart';
 import 'package:todo_mon_c9/ui/providers/list_provider.dart';
+import 'package:todo_mon_c9/ui/providers/settings_provider.dart';
 import 'package:todo_mon_c9/ui/screens/auth/login/widgets/all_widgets.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class AddBottomSeet extends StatefulWidget {
+
 
 
 
@@ -22,42 +26,54 @@ class AddBottomSeet extends StatefulWidget {
 class _AddBottomSeetState extends State<AddBottomSeet> {
 
   late ListProvider provider;
+  late SettingsProvider settingsProvider;
   DateTime selectedDate = DateTime.now();
   bool isTyping = false;
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  late bool isDark;
+  bool isPlaying = false;
 
   @override
   Widget build(BuildContext context) {
     provider =Provider.of(context);
+    settingsProvider =Provider.of(context);
+    isDark = settingsProvider.isDarkEnabled() ;
     return Container(
-      color: AppColors.accent,
+      color: isDark?AppColors.backGroundDark:AppColors.accent,
       child: Container(
         margin: EdgeInsets.all(15),
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.black),
-          color: AppColors.white
+          border: Border.all(color:isDark?AppColors.white:AppColors.black),
+          color: isDark?AppColors.accentDark:AppColors.white
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              "Add New Task",
-              style: Theme.of(context).textTheme.bodySmall,
+              AppLocalizations.of(context)!.addNewTask,
+              style:isDark?
+              TextStyle(
+                  color: AppColors.white,fontWeight: FontWeight.bold, fontSize: 30
+              ):
+              Theme.of(context).textTheme.bodySmall,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16,),
-            textFF(controller: titleController, labelText: "Enter Your Task Title"),
+            textFF(controller: titleController, labelText: AppLocalizations.of(context)!.taskTitleLabel , isDark: isDark),
             const SizedBox(height: 12,),
-            textFF(controller: descriptionController, labelText: "Enter Description" , isMultiLine: true),
+            textFF(controller: descriptionController, labelText: AppLocalizations.of(context)!.taskDescriptionLabel , isMultiLine: true ,isDark: isDark ),
             const SizedBox(height: 22,),
             Text(
-              "Select time",
-              style: Theme.of(context).textTheme.bodyMedium,
+              AppLocalizations.of(context)!.selectTime,
+              style:isDark?
+              TextStyle(
+                  color: AppColors.white,fontWeight: FontWeight.bold, fontSize: 20
+              ):
+              Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 22,),
             InkWell(
               onTap: (){
                 showMyDatePicker();
@@ -77,8 +93,9 @@ class _AddBottomSeetState extends State<AddBottomSeet> {
                 onPressed: (){
                   addTodoToFireStore();
                 },
-                child:Text("Add"),
+                child:Text(AppLocalizations.of(context)!.add),
             ),
+            const Spacer(),
           ],
         ),
       ),

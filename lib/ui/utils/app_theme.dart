@@ -4,7 +4,7 @@ import 'package:todo_mon_c9/ui/utils/app_colors.dart';
 
 abstract class AppTheme{
   static const TextStyle appBarTextStyle = TextStyle(fontWeight: FontWeight.bold,
-   fontSize: 22, color: AppColors.white);
+   fontSize: 22, color:AppColors.white);
   static const TextStyle taskTitleTextStyleNotDone = TextStyle(fontWeight: FontWeight.bold,
       fontSize: 20, color: AppColors.primary);
   static const TextStyle taskTitleTextStyleDone = TextStyle(fontWeight: FontWeight.bold,
@@ -21,6 +21,7 @@ abstract class AppTheme{
       elevation: 0.00,
       titleTextStyle: appBarTextStyle,
     ),
+
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         selectedIconTheme: IconThemeData(size: 32),
         unselectedIconTheme: IconThemeData(size: 32),
@@ -43,5 +44,8 @@ abstract class AppTheme{
       ),
     ),
   );
+
+
+
   static ThemeData darkTheme =  ThemeData();
 }

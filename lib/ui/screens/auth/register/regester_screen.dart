@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/model/app_user_dm.dart';
+import 'package:todo_mon_c9/ui/providers/settings_provider.dart';
 import 'package:todo_mon_c9/ui/screens/auth/login/widgets/all_widgets.dart';
 import 'package:todo_mon_c9/ui/screens/home/home_screen.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
@@ -22,15 +24,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController userNameController =TextEditingController();
   bool isPassShown = false;
   IconData icon = Icons.remove_red_eye_outlined;
+  late SettingsProvider settingsProvider;
 
   @override
   Widget build(BuildContext context) {
+    settingsProvider = Provider.of(context);
     return Scaffold(
       backgroundColor: AppColors.primary,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
-        title: const Text("Register"),
+        title: Text(
+            "Register",
+          style: TextStyle(
+            color: settingsProvider.isDarkEnabled()? AppColors.black:AppColors.white,
+            fontSize: 25,
+            fontWeight: FontWeight.bold
+
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(14.0),
@@ -41,7 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             width: MediaQuery.of(context).size.width *.8,
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color:AppColors.white,
+              color:settingsProvider.isDarkEnabled()? AppColors.accentDark:AppColors.white,
               borderRadius: BorderRadius.circular(25),
             ),
             child: Column(
@@ -50,7 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   "Create your account",
                   style: TextStyle(
                       fontSize: 24,
-                      color: Colors.black,
+                      color: settingsProvider.isDarkEnabled()? AppColors.white:AppColors.black,
                       fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),

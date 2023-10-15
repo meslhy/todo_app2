@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/ui/providers/list_provider.dart';
+import 'package:todo_mon_c9/ui/providers/settings_provider.dart';
 import 'package:todo_mon_c9/ui/screens/home/tabs/list/todo_widget.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
 
@@ -15,6 +16,7 @@ class ListScreen extends StatefulWidget {
 class _ListScreenState extends State<ListScreen> {
 
  late ListProvider provider ;
+ late SettingsProvider settingsProvider ;
 
  @override
   void initState() {
@@ -22,11 +24,13 @@ class _ListScreenState extends State<ListScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       provider.refreshTodosList();
     });
+
   }
 
   @override
   Widget build(BuildContext context) {
     provider = Provider.of(context);
+    settingsProvider = Provider.of(context);
 
     return Column(
       children: [
@@ -64,7 +68,7 @@ class _ListScreenState extends State<ListScreen> {
               activeDayColor: AppColors.primary,
               activeBackgroundDayColor: AppColors.white,
               //selectableDayPredicate: (date) => date.weekday != 5,
-              locale: 'en',
+              locale:'en_ISO',
             ),
           ],
         ),
@@ -79,6 +83,7 @@ class _ListScreenState extends State<ListScreen> {
       ],
     );
   }
+
 
 
 }

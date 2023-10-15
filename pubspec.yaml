@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+
   flutter_localizations:
     sdk: flutter
 
@@ -25,6 +27,7 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   shared_preferences: ^2.2.1
   vibration: ^1.8.2
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,17 @@
 {
-
+"welcome":"أهلا,",
+"list":"القائمه",
+"settings":"الاعدادات",
+"addNewTask":"اضافه مهمه جديده",
+"taskTitleLabel":"ادخل عنوان المهمه الخاصه بك",
+"taskDescriptionLabel":"اخل وصف المهمه الخاصه بك",
+"selectTime":"اختر التاريخ",
+"add":"أضف",
+"done":"تم!",
+"language":"اللغه",
+"mode":"الوضع",
+"toDoList":"To Do List",
+"editTask":"تعديل المهمه",
+"saveChanges":"حفظ النغييرات",
+"delete":"حذف"
 }

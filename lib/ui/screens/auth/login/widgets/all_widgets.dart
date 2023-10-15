@@ -8,14 +8,22 @@ Widget textFF({
   bool isShown = true,
   IconButton? icon ,
   bool isMultiLine = false,
+  bool isDark = false,
 }) => TextFormField(
   controller: controller,
+  style: TextStyle(
+    color: isDark ? AppColors.white : AppColors.black,
+  ),
   decoration: InputDecoration(
+    filled: true,
+    fillColor:isDark? AppColors.black : AppColors.white,
     hintText: labelText,
+    hintStyle: TextStyle(
+      color: isDark? AppColors.white : AppColors.black ,
+    ),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
     suffixIcon: isPass?
     icon: null,
-
 ),
   obscureText: !isShown,
   keyboardType:isMultiLine? TextInputType.multiline : null,

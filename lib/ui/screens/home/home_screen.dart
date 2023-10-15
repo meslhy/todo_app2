@@ -5,11 +5,14 @@ import 'package:todo_mon_c9/model/app_user_dm.dart';
 import 'package:todo_mon_c9/shared_locale/helper.dart';
 import 'package:todo_mon_c9/ui/bottom_sheet/bottom_sheet_screen.dart';
 import 'package:todo_mon_c9/ui/providers/list_provider.dart';
+import 'package:todo_mon_c9/ui/providers/settings_provider.dart';
 import 'package:todo_mon_c9/ui/screens/auth/login/login_screen.dart';
 import 'package:todo_mon_c9/ui/screens/home/tabs/list/list_screen.dart';
 import 'package:todo_mon_c9/ui/screens/home/tabs/settings/settings_screen.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
 import 'package:todo_mon_c9/ui/utils/app_theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = "home";
@@ -26,25 +29,27 @@ class _HomeScreenState extends State<HomeScreen> {
     SettingsScreen(),
   ];
 
-  late ListProvider provider;
+  late ListProvider listProvider;
+  late SettingsProvider settingsProvider;
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of(context);
+    listProvider = Provider.of(context);
+    settingsProvider = Provider.of(context);
     return Scaffold(
-      backgroundColor: AppColors.accent,
+      backgroundColor:settingsProvider.isDarkEnabled()? AppColors.backGroundDark: AppColors.accent,
       appBar: AppBar(
         elevation: 0.00,
         backgroundColor: AppColors.primary,
         title: Text(
-          currentIndex == 1? "Settings" : "Welcome ${AppUser.currentUser!.userName}",
-          style: AppTheme.appBarTextStyle,
+          currentIndex == 1? AppLocalizations.of(context)!.settings : "${AppLocalizations.of(context)!.welcome} ${AppUser.currentUser!.userName}",
+          style:settingsProvider.isDarkEnabled()? AppTheme.appBarTextStyle.copyWith(color: AppColors.black):AppTheme.appBarTextStyle,
         ),
         actions: [
           IconButton(
             onPressed: (){
               AppUser.currentUser = null;
               SharedPrefernce.putData(key: "currentUser" ,user: '');
-              provider.todos.clear();
+              listProvider.todos.clear();
               Navigator.pushReplacementNamed(context, LoginScreen.routeName);
 
             },
@@ -68,23 +73,31 @@ class _HomeScreenState extends State<HomeScreen> {
             Icons.add
         ),
         shape: RoundedRectangleBorder(
-            side:const BorderSide(width: 3, color: AppColors.white),
+            side: BorderSide(width: 3, color: AppColors.white),
             borderRadius: BorderRadius.circular(50)),
 
       );
 
   BottomBar() => BottomAppBar(
-        child: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (index) {
-            currentIndex = index;
-            setState(() {});
-          },
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.list), label: "list"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings), label: "settings"),
-          ],
+        child: Theme(
+          data:Theme.of(context).copyWith(
+            canvasColor: settingsProvider.isDarkEnabled()?
+            AppColors.accentDark : AppColors.white,
+          ),
+          child: BottomNavigationBar(
+            unselectedItemColor:settingsProvider.isDarkEnabled()?AppColors.white:AppColors.black,
+            unselectedLabelStyle: TextStyle(color:settingsProvider.isDarkEnabled()?AppColors.white:AppColors.black),
+            currentIndex: currentIndex,
+            onTap: (index) {
+              currentIndex = index;
+              setState(() {});
+            },
+            items: [
+              BottomNavigationBarItem(icon: Icon(Icons.list,), label: AppLocalizations.of(context)!.list),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.settings), label: AppLocalizations.of(context)!.settings),
+            ],
+          ),
         ),
         clipBehavior: Clip.hardEdge,
         notchMargin: 5,

@@ -3,8 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/model/app_user_dm.dart';
 import 'package:todo_mon_c9/model/todo_dm.dart';
 import 'package:todo_mon_c9/ui/providers/list_provider.dart';
+import 'package:todo_mon_c9/ui/providers/settings_provider.dart';
+import 'package:todo_mon_c9/ui/screens/auth/login/widgets/all_widgets.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
 import 'package:todo_mon_c9/ui/utils/app_theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class EditScreen extends StatefulWidget {
 
@@ -18,9 +22,11 @@ class _EditScreenState extends State<EditScreen> {
 
 
   late ListProvider provider;
+  late SettingsProvider settingsProvider;
   late DateTime selectedDate ;
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  late bool isDark;
 
   @override
   void initState() {
@@ -33,13 +39,15 @@ class _EditScreenState extends State<EditScreen> {
   @override
   Widget build(BuildContext context) {
     provider = Provider.of(context);
+    settingsProvider = Provider.of(context);
+    isDark = settingsProvider.isDarkEnabled();
     return Scaffold(
-      backgroundColor: AppColors.accent,
+      backgroundColor:isDark? AppColors.backGroundDark: AppColors.accent,
       appBar: AppBar(
         elevation: 0.00,
         backgroundColor: AppColors.primary,
         title: Text(
-          "To Do List",
+          AppLocalizations.of(context)!.toDoList,
           style:AppTheme.appBarTextStyle,
         ),
       ),
@@ -70,7 +78,7 @@ class _EditScreenState extends State<EditScreen> {
                 width: MediaQuery.of(context).size.width *.8,
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color:AppColors.white,
+                  color:isDark?AppColors.accentDark : AppColors.white,
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Column(
@@ -78,28 +86,18 @@ class _EditScreenState extends State<EditScreen> {
 
                   children: [
                     Text(
-                      "Edit Task",
-                      style: Theme.of(context).textTheme.bodySmall,
+                      AppLocalizations.of(context)!.editTask,
+                      style:isDark? TextStyle(color: AppColors.white,fontSize: 15): Theme.of(context).textTheme.bodySmall,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16,),
-                    TextField(
-                      controller:titleController ,
-                      decoration: InputDecoration(
-                        labelText: "Enter Your Task Title",
-                      ),
-                    ),
+                    textFF(controller: titleController, labelText:AppLocalizations.of(context)!.taskTitleLabel , isDark: isDark),
                     const SizedBox(height: 12,),
-                    TextField(
-                      controller:descriptionController,
-                      decoration: InputDecoration(
-                        labelText: "Enter Description",
-                      ),
-                    ),
+                    textFF(controller: descriptionController, labelText: AppLocalizations.of(context)!.taskDescriptionLabel,isMultiLine: true,isDark: isDark ),
                     const SizedBox(height: 22,),
                     Text(
-                      "Select time",
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      AppLocalizations.of(context)!.selectTime,
+                      style:isDark? TextStyle(color: AppColors.white,fontSize: 15): Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 22,),
                     InkWell(
@@ -108,7 +106,11 @@ class _EditScreenState extends State<EditScreen> {
                       },
                       child: Text(
                         "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
-                        style: TextStyle(
+                        style:settingsProvider.isDarkEnabled()?TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.white
+                        ): TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: AppColors.grey
@@ -116,7 +118,7 @@ class _EditScreenState extends State<EditScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    SizedBox(height: 100,),
+                    SizedBox(height: 50,),
                     InkWell(
                       onTap: ()async{
                         await changeData();
@@ -127,8 +129,8 @@ class _EditScreenState extends State<EditScreen> {
                             borderRadius: BorderRadius.circular(25),
                             color: AppColors.primary),
                         child: Center(
-                          child: const Text(
-                            "Save Changes",
+                          child: Text(
+                            AppLocalizations.of(context)!.saveChanges,
                             style: TextStyle(
                              color: AppColors.white,
                               fontSize: 25,

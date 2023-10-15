@@ -1,3 +1,18 @@
 {
 
+"welcome":"Welcome,",
+"list":"List",
+"settings":"Settings",
+"addNewTask":"Add New Task",
+"taskTitleLabel":"Enter your Task Title",
+"taskDescriptionLabel":"Enter your Task Description",
+"selectTime":"Select Time",
+"add":"Add",
+"done":"Done!",
+"language":"Language",
+"mode":"Mode",
+"toDoList":"To Do List",
+"editTask":"Edit Task",
+"saveChanges":"Save Changes",
+"delete":"Delete"
 }

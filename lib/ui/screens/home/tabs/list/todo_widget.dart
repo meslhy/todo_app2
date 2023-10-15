@@ -6,29 +6,45 @@ import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/model/app_user_dm.dart';
 import 'package:todo_mon_c9/model/todo_dm.dart';
 import 'package:todo_mon_c9/ui/providers/list_provider.dart';
+import 'package:todo_mon_c9/ui/providers/settings_provider.dart';
 import 'package:todo_mon_c9/ui/screens/edit_todo/edit_screen.dart';
 import 'package:todo_mon_c9/ui/utils/app_colors.dart';
 import 'package:todo_mon_c9/ui/utils/app_theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class ToDo extends StatelessWidget {
+
+class ToDo extends StatefulWidget {
 
   TodoDM model;
 
   ToDo({required this.model});
 
+  @override
+  State<ToDo> createState() => _ToDoState();
+}
+
+class _ToDoState extends State<ToDo> {
   late ListProvider provider;
 
   late bool isDone;
 
+  late SettingsProvider settingsProvider;
+  @override
+  void initState() {
+    super.initState();
+    isDone = widget.model.isDone;
+  }
+
   @override
   Widget build(BuildContext context) {
-    isDone = model.isDone;
+
     provider = Provider.of(context);
+    settingsProvider = Provider.of(context);
     return Container(
       height: MediaQuery.of(context).size.height * .12,
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color:settingsProvider.isDarkEnabled()? AppColors.accentDark: AppColors.white,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Slidable(
@@ -42,7 +58,7 @@ class ToDo extends StatelessWidget {
               onPressed: (_) {
                AppUser.collection().doc(AppUser.currentUser!.id)
                     .collection(TodoDM.collectionName)
-                    .doc(model.id)
+                    .doc(widget.model.id)
                     .delete()
                     .then((_){
                    provider.refreshTodosList();
@@ -51,7 +67,7 @@ class ToDo extends StatelessWidget {
               backgroundColor: Color(0xFFFE4A49),
               foregroundColor: Colors.white,
               icon: Icons.delete,
-              label: 'Delete',
+              label: AppLocalizations.of(context)!.delete,
               borderRadius: BorderRadius.circular(20),
             ),
           ],
@@ -60,14 +76,14 @@ class ToDo extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           child: InkWell(
             onTap: (){
-              TodoDM.currentTodoDM = model;
+              TodoDM.currentTodoDM = widget.model;
               Navigator.pushNamed(context,EditScreen.routeName);
             },
             child: Row(
               children: [
                  VerticalDivider(
                   thickness: 5,
-                  color: model.isDone ? AppColors.green : AppColors.primary,
+                  color: isDone ? AppColors.green : AppColors.primary,
                 ),
                 const SizedBox(
                   width: 12,
@@ -78,8 +94,8 @@ class ToDo extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        model.title,
-                        style:model.isDone?
+                        widget.model.title,
+                        style:isDone?
                         AppTheme.taskTitleTextStyleDone :
                         AppTheme.taskTitleTextStyleNotDone,
                       ),
@@ -87,8 +103,8 @@ class ToDo extends StatelessWidget {
                         height: 12,
                       ),
                       Text(
-                        model.description,
-                        style: AppTheme.taskDescriptionTextStyle,
+                        widget.model.description,
+                        style:settingsProvider.isDarkEnabled()?  AppTheme.taskDescriptionTextStyle.copyWith(color: AppColors.white): AppTheme.taskDescriptionTextStyle,
                       )
                     ],
                   ),
@@ -97,13 +113,15 @@ class ToDo extends StatelessWidget {
                   onTap: ()async{
 
                     isDone = !isDone;
+                    setState(() {});
+
                     await setDoneOption();
                   },
                   child: isDone?
                   Padding(
                     padding: const EdgeInsets.only(right: 18.0),
                     child: Text(
-                        "Done!",
+                        AppLocalizations.of(context)!.done,
                       style: TextStyle(
                         color: AppColors.green,
                         fontWeight: FontWeight.bold,
@@ -132,8 +150,8 @@ class ToDo extends StatelessWidget {
   }
 
   Future setDoneOption() async{
-    AppUser.collection().doc(AppUser.currentUser!.id).collection(TodoDM.collectionName).doc("${model.id}").update({
-      "isDone": !model.isDone,
+    AppUser.collection().doc(AppUser.currentUser!.id).collection(TodoDM.collectionName).doc("${widget.model.id}").update({
+      "isDone": !widget.model.isDone,
     }).then((value) =>provider.refreshTodosList());
 
 

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_mon_c9/model/app_user_dm.dart';
 import 'package:todo_mon_c9/shared_locale/helper.dart';
@@ -31,10 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late ListProvider listProvider;
   late SettingsProvider settingsProvider;
+  late bool isDark;
   @override
   Widget build(BuildContext context) {
     listProvider = Provider.of(context);
     settingsProvider = Provider.of(context);
+    isDark = settingsProvider.isDarkEnabled();
     return Scaffold(
       backgroundColor:settingsProvider.isDarkEnabled()? AppColors.backGroundDark: AppColors.accent,
       appBar: AppBar(
@@ -47,11 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: (){
-              AppUser.currentUser = null;
-              SharedPrefernce.putData(key: "currentUser" ,user: '');
-              listProvider.todos.clear();
-              Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-
+              logout();
             },
            icon:const Icon(Icons.logout_rounded),
           ),
@@ -119,5 +118,56 @@ class _HomeScreenState extends State<HomeScreen> {
     return documentSnapshot.data()!;
 
 
+  }
+
+  void logout() {
+    showDialog(
+      builder:(_) {
+        return  AlertDialog(
+          content:Container(
+            height: MediaQuery.of(context).size.height * .1,
+            width: MediaQuery.of(context).size.width * .5,
+            child: Column(
+              children: [
+                 Text(
+                  "You want to Log out ?",
+                  style: TextStyle(
+                    color: isDark? AppColors.white:AppColors.black,
+                  ),
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                        onPressed: (){
+                         Navigator.pop(context);
+                        },
+                        child:const Text("Cancel")),
+                    ElevatedButton(
+                        onPressed: (){
+                          AppUser.currentUser = null;
+                          SharedPrefernce.putData(key: "currentUser" ,user: '');
+                          listProvider.todos.clear();
+                          Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+                        },
+                        child:const Text("Logout"),
+                    ),
+                  ],
+                ),
+                Spacer(),
+              ],
+            ),
+          ),
+          backgroundColor: isDark? AppColors.accentDark: AppColors.white,
+          shape: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color:isDark? AppColors.white: AppColors.black)
+          ),
+        );
+      } ,
+      context: context ,
+      barrierDismissible: false,
+    );
   }
 }

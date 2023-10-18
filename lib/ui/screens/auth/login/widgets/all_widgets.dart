@@ -21,7 +21,10 @@ Widget textFF({
     hintStyle: TextStyle(
       color: isDark? AppColors.white : AppColors.black ,
     ),
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10) ,
+      borderSide: BorderSide(width: 5 , color: isDark? AppColors.white : AppColors.black ),
+    ),
     suffixIcon: isPass?
     icon: null,
 ),

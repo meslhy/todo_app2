@@ -51,7 +51,7 @@ class _ToDoState extends State<ToDo> {
         key: Key("0"),
         startActionPane: ActionPane(
           motion: const BehindMotion(),
-          extentRatio: 1,
+          extentRatio: .5,
           children: [
             // A SlidAbleAction can have an icon and/or a label.
             SlidableAction(
